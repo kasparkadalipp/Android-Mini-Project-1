@@ -1,14 +1,31 @@
 package com.example.recipesapp
 
+import android.app.Application
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import androidx.exifinterface.media.ExifInterface
+import androidx.lifecycle.AndroidViewModel
 import java.io.File
 
-class ImageUtils {
+class ImageUtils(application: Application) : AndroidViewModel(application) {
+
     companion object {
-        fun fixOrientation(bitmap: Bitmap, pictureFile: File): Bitmap {
-            val exif = ExifInterface(pictureFile.absolutePath)
+
+        private lateinit var defaultThumbnail: Bitmap
+
+        fun getThumbnailOrDefault(url: String, size: Int): Bitmap {
+            if (!File(url).exists())
+                return defaultThumbnail
+            var bitmap = BitmapFactory.decodeFile(url)
+            bitmap = scaledBitmap(size, bitmap)
+            bitmap = fixOrientation(bitmap, url)
+            return bitmap
+        }
+
+        private fun fixOrientation(bitmap: Bitmap, url: String): Bitmap {
+            val exif = ExifInterface(url)
 
             return when (exif.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
@@ -27,9 +44,14 @@ class ImageUtils {
             return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
         }
 
-        fun scaledBitmap(size:Int, fullBitmap: Bitmap): Bitmap {
+        private fun scaledBitmap(size: Int, fullBitmap: Bitmap): Bitmap {
             val ratio = fullBitmap.width.toDouble() / fullBitmap.height
             return Bitmap.createScaledBitmap(fullBitmap, (size * ratio).toInt(), size, false)
+        }
+
+        fun loadDefaultThumbnail(context: Context) {
+            if (!this::defaultThumbnail.isInitialized)
+                defaultThumbnail = BitmapFactory.decodeResource(context.resources, R.drawable.missing_image)
         }
     }
 }

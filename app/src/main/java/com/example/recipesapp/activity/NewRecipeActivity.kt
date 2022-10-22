@@ -2,7 +2,6 @@ package com.example.recipesapp.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.BitmapFactory
 
 import android.os.Bundle
 import android.os.Environment
@@ -16,8 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.example.recipesapp.RecipeViewModel
 import com.example.recipesapp.databinding.ActivityNewRecipeBinding
-import com.example.recipesapp.ImageUtils.Companion.fixOrientation
-import com.example.recipesapp.ImageUtils.Companion.scaledBitmap
+import com.example.recipesapp.ImageUtils.Companion.getThumbnailOrDefault
 import com.example.recipesapp.room.LocalRecipeDb
 import com.example.recipesapp.room.RecipeEntity
 import java.io.File
@@ -31,7 +29,7 @@ class NewRecipeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNewRecipeBinding
     private lateinit var db: LocalRecipeDb
-    private var photoFile: File = File("")
+    private var thumbnail: File = File("")
     private val viewModel: RecipeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +51,7 @@ class NewRecipeActivity : AppCompatActivity() {
             // Fetch the values from UI user input
             val title = binding.newrecipeEditTitle.text
             val description = binding.newrecipeEditDescription.text
-            val imageURL = if(photoFile.exists()) photoFile.absolutePath else  ""
+            val imageURL = if(thumbnail.exists()) thumbnail.absolutePath else  ""
 
             if (title.isNullOrEmpty()) {
                 Toast.makeText(this, "Title can't be empty", Toast.LENGTH_SHORT).show()
@@ -71,9 +69,9 @@ class NewRecipeActivity : AppCompatActivity() {
     }
 
     private fun takePhoto() {
-        photoFile = getPhotoFile(System.currentTimeMillis().toString())
+        thumbnail = getPhotoFile(System.currentTimeMillis().toString())
         val fileUri =
-            FileProvider.getUriForFile(this, "ee.ut.cs.recipeappp.fileprovider", photoFile)
+            FileProvider.getUriForFile(this, "ee.ut.cs.recipeappp.fileprovider", thumbnail)
 
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
@@ -84,9 +82,8 @@ class NewRecipeActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 Log.w(TAG, "Image captured")
-                val fullBitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
-                val scaledBitmap = fixOrientation(scaledBitmap(800, fullBitmap), photoFile)
-                binding.newrecipeThumbnailImage.setImageBitmap(scaledBitmap)
+                binding.newrecipeThumbnailImage
+                    .setImageBitmap(getThumbnailOrDefault(thumbnail.absolutePath, 800))
             } else {
                 Log.w(TAG, "Request cancelled or something else went wrong")
             }

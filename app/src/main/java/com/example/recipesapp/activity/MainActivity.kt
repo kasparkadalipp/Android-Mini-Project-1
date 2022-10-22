@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.recipesapp.ImageUtils
 import com.example.recipesapp.RecipeViewModel
 import com.example.recipesapp.RecipesAdapter
 import com.example.recipesapp.activity.NewRecipeActivity.Companion.EXTRA_RECIPE_ID
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupRecyclerView()
-
+        ImageUtils.loadDefaultThumbnail(applicationContext)
         binding.buttonAddNewRecipe.setOnClickListener{addNewRecipe()}
     }
 

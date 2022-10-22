@@ -1,16 +1,13 @@
 package com.example.recipesapp
 
-import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipesapp.ImageUtils.Companion.fixOrientation
-import com.example.recipesapp.ImageUtils.Companion.scaledBitmap
+import com.example.recipesapp.ImageUtils.Companion.getThumbnailOrDefault
 import com.example.recipesapp.room.RecipeEntity
-import java.io.File
 
 class RecipesAdapter(
     var data: Array<RecipeEntity> = arrayOf(),
@@ -36,16 +33,8 @@ class RecipesAdapter(
 
         holder.itemView.apply {
             this.findViewById<TextView>(R.id.listview_text_recipe_title).text = recipe.title
-            val imageView = this.findViewById<ImageView>(R.id.listview_image_recipe_thumbnail)
-            imageView.setImageBitmap(
-                scaledBitmap(400,
-                    if (File(recipe.thumbnail_url).exists()) {
-                        fixOrientation(BitmapFactory.decodeFile(recipe.thumbnail_url), File(recipe.thumbnail_url))
-                    } else {
-                        BitmapFactory.decodeResource(context.resources, R.drawable.missing_image)
-                    }
-                )
-            )
+            this.findViewById<ImageView>(R.id.listview_image_recipe_thumbnail)
+                .setImageBitmap(getThumbnailOrDefault(recipe.thumbnail_url, 800))
             setOnClickListener { listener.onRecipeClick(recipe) }
         }
     }

@@ -6,7 +6,6 @@ import com.example.recipesapp.room.LocalRecipeDb
 import com.example.recipesapp.room.RecipeEntity
 
 class RecipeViewModel(application: Application): AndroidViewModel(application) {
-
     var localDb = LocalRecipeDb.getInstance(application)
 
     var recipeArray: Array<RecipeEntity> = arrayOf(
