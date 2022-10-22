@@ -3,7 +3,7 @@ package com.example.recipesapp.activity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.recipesapp.ImageUtils
+import com.example.recipesapp.ImageUtils.Companion.getThumbnailOrDefault
 import com.example.recipesapp.RecipeViewModel
 import com.example.recipesapp.activity.NewRecipeActivity.Companion.EXTRA_RECIPE_ID
 import com.example.recipesapp.databinding.ActivityRecipeDetailsBinding
@@ -40,7 +40,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
         recipe.apply {
             binding.detailsviewTextTitle.text = title
             binding.detailsviewTextDescription.text = description
-            binding.detailsviewImage.setImageBitmap(ImageUtils.getThumbnailOrDefault(thumbnail_url, 400))
+            binding.detailsviewImage.setImageBitmap(getThumbnailOrDefault(thumbnail_url, 400))
         }
     }
 }
