@@ -1,0 +1,11 @@
+<resources>
+<!--    main_activity-->
+    <string name="app_name">Recipes (mini project)</string>
+    <string name="new_recipe_button_description">Add New Recipe</string>
+    <!--activity_new_recipe-->
+    <string name="recipe_thumbnail_description">Recipe Thumbnail</string>
+    <string name="capture_image_for_thumbnail_description">Take Photo for Thumbnail</string>
+    <string name="recipe_title_edittext_hint">Title</string>
+    <string name="recipe_description_edittext_hint">Description</string>
+    <string name="create_new_recipe">Create</string>
+</resources>
