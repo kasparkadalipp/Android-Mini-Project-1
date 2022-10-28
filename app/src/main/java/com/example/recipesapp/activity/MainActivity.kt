@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.recipesapp.ImageUtils
 import com.example.recipesapp.RecipeViewModel
 import com.example.recipesapp.RecipesAdapter
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         val recipeClickListener = RecipesAdapter.RecipeClickListener { p -> openRecipeDetailsActivity(p) }
         recipesAdapter = RecipesAdapter(model.recipeArray, recipeClickListener)
         binding.recyclerviewRecipelist.adapter = recipesAdapter
-        binding.recyclerviewRecipelist.layoutManager = LinearLayoutManager(this)
+        binding.recyclerviewRecipelist.layoutManager = GridLayoutManager(applicationContext, 2)
     }
 
     private fun openRecipeDetailsActivity(recipe: RecipeEntity) {
