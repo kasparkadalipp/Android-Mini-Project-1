@@ -8,11 +8,7 @@ import com.example.recipesapp.room.RecipeEntity
 class RecipeViewModel(application: Application): AndroidViewModel(application) {
     var localDb = LocalRecipeDb.getInstance(application)
 
-    var recipeArray: Array<RecipeEntity> = arrayOf(
-        RecipeEntity( 0, "Peanutbutter Sandwich", "Jamie Oliver", ""),
-        RecipeEntity(1, "Boiled banana", "Gordon Ramsay", ""),
-        RecipeEntity(2, "Classic Pesto", "Gennaro Contaldo", ""),
-    )
+    var recipeArray: Array<RecipeEntity> = arrayOf()
 
     fun refresh(){
         // Reload dataset from DB, put it in in-memory list
