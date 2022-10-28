@@ -7,12 +7,14 @@ import com.example.recipesapp.ImageUtils.Companion.getThumbnailOrDefault
 import com.example.recipesapp.RecipeViewModel
 import com.example.recipesapp.activity.NewRecipeActivity.Companion.EXTRA_RECIPE_ID
 import com.example.recipesapp.databinding.ActivityRecipeDetailsBinding
+import com.example.recipesapp.room.LocalRecipeDb
 import com.example.recipesapp.room.RecipeEntity
 
 class RecipeDetailsActivity : AppCompatActivity() {
 
     private val viewModel: RecipeViewModel by viewModels()
     private lateinit var binding: ActivityRecipeDetailsBinding
+    private lateinit var db: LocalRecipeDb
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +35,8 @@ class RecipeDetailsActivity : AppCompatActivity() {
 
     private fun getRecipeFromDb(id: Int): RecipeEntity? {
         // TODO Use Room to load recipe with the given ID, return it
-        return null
+        db = LocalRecipeDb.getInstance(applicationContext)
+        return db.getRecipeDao().loadRecipeByID(id)
     }
 
     private fun showRecipe(recipe: RecipeEntity) {
