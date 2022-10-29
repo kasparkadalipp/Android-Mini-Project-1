@@ -8,6 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipesapp.ImageUtils.Companion.getThumbnailOrDefault
 import com.example.recipesapp.room.RecipeEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RecipesAdapter(
     var data: Array<RecipeEntity> = arrayOf(),
@@ -33,8 +37,14 @@ class RecipesAdapter(
 
         holder.itemView.apply {
             this.findViewById<TextView>(R.id.listview_text_recipe_title).text = recipe.title
-            this.findViewById<ImageView>(R.id.listview_image_recipe_thumbnail)
-                .setImageBitmap(getThumbnailOrDefault(recipe.thumbnail_url, 800))
+            val thumbnail = this.findViewById<ImageView>(R.id.listview_image_recipe_thumbnail)
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val scaledThumbnail = getThumbnailOrDefault(recipe.thumbnail_url, 800)
+                withContext(Dispatchers.Main) {
+                    thumbnail.setImageBitmap(scaledThumbnail)
+                }
+            }
             setOnClickListener { listener.onRecipeClick(recipe) }
         }
     }
