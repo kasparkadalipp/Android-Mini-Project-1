@@ -24,6 +24,10 @@ class ImageUtils(application: Application) : AndroidViewModel(application) {
             return bitmap
         }
 
+        private fun scaledBitmap(size: Int, fullBitmap: Bitmap): Bitmap {
+            return Bitmap.createScaledBitmap(fullBitmap, size, size, false)
+        }
+
         private fun fixOrientation(bitmap: Bitmap, url: String): Bitmap {
             val exif = ExifInterface(url)
 
@@ -41,12 +45,7 @@ class ImageUtils(application: Application) : AndroidViewModel(application) {
         private fun rotateBitmap(bitmap: Bitmap, degrees: Int): Bitmap {
             val matrix = Matrix()
             matrix.postRotate(degrees.toFloat())
-            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-        }
-
-        private fun scaledBitmap(size: Int, fullBitmap: Bitmap): Bitmap {
-            val ratio = fullBitmap.width.toDouble() / fullBitmap.height
-            return Bitmap.createScaledBitmap(fullBitmap, (size * ratio).toInt(), size, false)
+            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, false)
         }
 
         fun loadDefaultThumbnail(context: Context) {
