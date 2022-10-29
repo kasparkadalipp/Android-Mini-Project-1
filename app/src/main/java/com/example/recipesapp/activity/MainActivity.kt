@@ -3,7 +3,6 @@ package com.example.recipesapp.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Im
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.recipesapp.ImageUtils
@@ -12,7 +11,6 @@ import com.example.recipesapp.RecipeViewModel
 import com.example.recipesapp.RecipesAdapter
 import com.example.recipesapp.activity.NewRecipeActivity.Companion.EXTRA_RECIPE_ID
 import com.example.recipesapp.databinding.ActivityMainBinding
-import com.example.recipesapp.room.RecipeEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,15 +31,20 @@ class MainActivity : AppCompatActivity() {
         binding.buttonAddNewRecipe.setOnClickListener{addNewRecipe()}
     }
 
-    override fun onResume(){  // TODO only reload images when data has changed
+    override fun onResume(){
         super.onResume()
-        model.refresh()
-        recipesAdapter.data = model.recipeArray
-        recipesAdapter.notifyDataSetChanged()
 
+        if(model.updateData()){
+            recipesAdapter.data = model.recipeArray
+            recipesAdapter.notifyItemRangeChanged(0, model.recipeArray.size)
+            updateThumbnails() // TODO if new element is inserted only update its thumbnail
+        }
+    }
+
+    private fun updateThumbnails() {
         CoroutineScope(Dispatchers.IO).launch {
             model.recipeArray.forEachIndexed { index, it ->
-                if (it.url.isNotEmpty()){
+                if (it.url.isNotEmpty()) {
                     it.thumbnail = ImageUtils.getThumbnailOrDefault(it.url, 400)
                     withContext(Dispatchers.Main) {
                         recipesAdapter.notifyItemChanged(index)

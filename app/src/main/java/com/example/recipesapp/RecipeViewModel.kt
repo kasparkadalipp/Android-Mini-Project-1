@@ -9,9 +9,10 @@ class RecipeViewModel(val app: Application) : AndroidViewModel(app) {
 
     var recipeArray: Array<Recipe> = arrayOf()
 
-    fun refresh() {
+    fun updateData() : Boolean{
         // Reload dataset from DB, put it in in-memory list
-        recipeArray = localDb.getRecipeDao().loadRecipes().map {
+
+        val result = localDb.getRecipeDao().loadRecipes().map {
             Recipe(
                 it.id,
                 it.title,
@@ -19,5 +20,11 @@ class RecipeViewModel(val app: Application) : AndroidViewModel(app) {
                 ImageUtils.defaultThumbnail
             )
         }.toTypedArray()
+
+        if(recipeArray.isEmpty() || result.size > recipeArray.size) {
+            recipeArray = result
+            return true
+        }
+        return false
     }
 }
