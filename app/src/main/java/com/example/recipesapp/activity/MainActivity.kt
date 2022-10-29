@@ -41,9 +41,11 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             model.recipeArray.forEachIndexed { index, it ->
-                it.thumbnail = ImageUtils.getThumbnailOrDefault(it.url, 400)
-                withContext(Dispatchers.Main) {
-                    recipesAdapter.notifyItemChanged(index)
+                if (it.url.isNotEmpty()){
+                    it.thumbnail = ImageUtils.getThumbnailOrDefault(it.url, 400)
+                    withContext(Dispatchers.Main) {
+                        recipesAdapter.notifyItemChanged(index)
+                    }
                 }
             }
         }
