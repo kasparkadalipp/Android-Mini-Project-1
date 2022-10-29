@@ -48,6 +48,4 @@ class RecipesAdapter(
             setOnClickListener { listener.onRecipeClick(recipe) }
         }
     }
-
-
 }

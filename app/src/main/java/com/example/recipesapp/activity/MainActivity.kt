@@ -22,9 +22,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         model = ViewModelProvider(this).get(RecipeViewModel::class.java)
-
-        setupRecyclerView()
         ImageUtils.loadDefaultThumbnail(applicationContext)
+        setupRecyclerView()
         binding.buttonAddNewRecipe.setOnClickListener{addNewRecipe()}
     }
 

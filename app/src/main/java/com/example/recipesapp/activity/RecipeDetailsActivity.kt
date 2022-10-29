@@ -21,21 +21,18 @@ class RecipeDetailsActivity : AppCompatActivity() {
         // Setup View Binding
         binding = ActivityRecipeDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        db = LocalRecipeDb.getInstance(applicationContext)
         loadAndShowRecipe()
     }
 
     private fun loadAndShowRecipe() {
         // Get recipe ID from intent, load recipe details  from DB and show it in the UI
         val id = intent.getIntExtra(EXTRA_RECIPE_ID, -1)
-
         val loadedRecipe = getRecipeFromDb(id)
         loadedRecipe?.let { showRecipe(it) }
     }
 
     private fun getRecipeFromDb(id: Int): RecipeEntity? {
-        // TODO Use Room to load recipe with the given ID, return it
-        db = LocalRecipeDb.getInstance(applicationContext)
         return db.getRecipeDao().loadRecipeByID(id)
     }
 
