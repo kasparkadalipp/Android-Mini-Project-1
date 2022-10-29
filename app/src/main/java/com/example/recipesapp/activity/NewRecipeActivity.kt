@@ -13,9 +13,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import com.example.recipesapp.RecipeViewModel
 import com.example.recipesapp.databinding.ActivityNewRecipeBinding
 import com.example.recipesapp.ImageUtils.Companion.getThumbnailOrDefault
+import com.example.recipesapp.NewRecipeViewModel
 import com.example.recipesapp.room.LocalRecipeDb
 import com.example.recipesapp.room.RecipeEntity
 import java.io.File
@@ -29,36 +29,38 @@ class NewRecipeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNewRecipeBinding
     private lateinit var db: LocalRecipeDb
-    private var thumbnail: File = File("")
-    private val viewModel: RecipeViewModel by viewModels()
+    private var thumbnailURL: String = ""
+    private val viewModel: NewRecipeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityNewRecipeBinding.inflate(layoutInflater)
         db = LocalRecipeDb.getInstance(applicationContext)
         setContentView(binding.root)
-
         binding.newrecipeButtonTakePhoto.setOnClickListener { takePhoto() }
-
         setupSaveButton()
     }
 
+    override fun onResume() {
+        Log.i(TAG, "onResume called")
+        super.onResume()
+        binding.newrecipeThumbnail.setImageBitmap(viewModel.thumbnail)
+        thumbnailURL = viewModel.thumbnailURL
+        Log.i(TAG, "load values from viewModel")
+    }
 
     private fun setupSaveButton() {
-
         binding.newrecipeButtonSave.setOnClickListener {
             // Fetch the values from UI user input
             val title = binding.newrecipeEditTitle.text
             val description = binding.newrecipeEditDescription.text
-            val imageURL = if(thumbnail.exists()) thumbnail.absolutePath else  ""
 
             if (title.isNullOrEmpty()) {
                 Toast.makeText(this, "Title can't be empty", Toast.LENGTH_SHORT).show()
             } else if (description.isNullOrEmpty()) {
                 Toast.makeText(this, "Description can't be empty", Toast.LENGTH_SHORT).show()
             } else {
-                saveRecipeToDb(RecipeEntity(0, title.toString(), description.toString(), imageURL))
+                saveRecipeToDb(RecipeEntity(0, title.toString(), description.toString(), thumbnailURL))
                 finish()
             }
         }
@@ -69,9 +71,11 @@ class NewRecipeActivity : AppCompatActivity() {
     }
 
     private fun takePhoto() {
-        thumbnail = getPhotoFile(System.currentTimeMillis().toString())
+        val file = getPhotoFile(System.currentTimeMillis().toString())
+        Log.i(TAG, "Image thumbnail URL set")
+        thumbnailURL = file.absolutePath
         val fileUri =
-            FileProvider.getUriForFile(this, "ee.ut.cs.recipeappp.fileprovider", thumbnail)
+            FileProvider.getUriForFile(this, "ee.ut.cs.recipeappp.fileprovider", file)
 
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
@@ -81,11 +85,14 @@ class NewRecipeActivity : AppCompatActivity() {
     private val launcher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                Log.w(TAG, "Image captured")
-                binding.newrecipeThumbnailImage
-                    .setImageBitmap(getThumbnailOrDefault(thumbnail.absolutePath, 800))
+                Log.i(TAG, "Image thumbnail set")
+                val thumbnail = getThumbnailOrDefault(thumbnailURL, 800)
+                viewModel.thumbnail = thumbnail
+                viewModel.thumbnailURL = thumbnailURL
+                Log.i(TAG, "Update thumbnail in viewmodel")
+                binding.newrecipeThumbnail.setImageBitmap(thumbnail)
             } else {
-                Log.w(TAG, "Request cancelled or something else went wrong")
+                Log.i(TAG, "Request cancelled or something else went wrong")
             }
         }
 
@@ -100,6 +107,7 @@ class NewRecipeActivity : AppCompatActivity() {
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             Log.d(TAG, "failed to create directory")
         }
+
         return File(mediaStorageDir.path + File.separator + fileName)
     }
 }

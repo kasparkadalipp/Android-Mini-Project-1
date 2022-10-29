@@ -13,10 +13,10 @@ class ImageUtils(application: Application) : AndroidViewModel(application) {
 
     companion object {
 
-        private lateinit var defaultThumbnail: Bitmap
+        lateinit var defaultThumbnail: Bitmap
 
         fun getThumbnailOrDefault(url: String, size: Int): Bitmap {
-            if (!File(url).exists())
+            if (url.isEmpty())
                 return defaultThumbnail
             var bitmap = BitmapFactory.decodeFile(url)
             bitmap = scaledBitmap(size, bitmap)
