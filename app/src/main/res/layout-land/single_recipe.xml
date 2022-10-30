@@ -24,10 +24,16 @@
     <TextView
         android:id="@+id/listview_text_recipe_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:layout_height="50sp"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:fontFamily="serif"
+        android:text="@string/recipe_title_edittext_hint"
+        app:autoSizeMaxTextSize="24sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"/>
 
 
 </LinearLayout>

@@ -11,10 +11,11 @@
 
     <ImageView
         android:id="@+id/listview_image_recipe_thumbnail"
-        android:layout_width="200sp"
-        android:layout_height="200sp"
+        android:layout_width="180sp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:adjustViewBounds="true"
+        android:baselineAlignBottom="false"
         android:contentDescription="@string/recipe_thumbnail_description"
         android:cropToPadding="true"
         android:padding="5dp"
@@ -24,10 +25,16 @@
     <TextView
         android:id="@+id/listview_text_recipe_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_height="50sp"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:fontFamily="serif"
+        android:text="@string/recipe_title_edittext_hint"
+        app:autoSizeMaxTextSize="24sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"/>
 
 
 </LinearLayout>
