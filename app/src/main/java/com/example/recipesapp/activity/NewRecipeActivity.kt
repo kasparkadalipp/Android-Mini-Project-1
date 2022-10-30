@@ -59,8 +59,8 @@ class NewRecipeActivity : AppCompatActivity() {
                 Toast.makeText(this, "Title can't be empty", Toast.LENGTH_SHORT).show()
             } else if (description.isNullOrEmpty()) {
                 Toast.makeText(this, "Description can't be empty", Toast.LENGTH_SHORT).show()
-            }else if (title.length > 100) {
-                Toast.makeText(this, "Title can contain up to 100 characters", Toast.LENGTH_SHORT).show()
+            }else if (title.length > 50) {
+                Toast.makeText(this, "Title can contain up to 50 characters", Toast.LENGTH_SHORT).show()
             }
             else {
                 saveRecipeToDb(RecipeEntity(0, title.toString(), description.toString(), thumbnailURL))
