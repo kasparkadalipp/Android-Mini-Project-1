@@ -1,10 +1,8 @@
 package com.example.recipesapp.activity
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.recipesapp.ImageUtils.Companion.getThumbnailOrDefault
-import com.example.recipesapp.RecipeViewModel
 import com.example.recipesapp.activity.NewRecipeActivity.Companion.EXTRA_RECIPE_ID
 import com.example.recipesapp.databinding.ActivityRecipeDetailsBinding
 import com.example.recipesapp.room.LocalRecipeDb
@@ -12,7 +10,6 @@ import com.example.recipesapp.room.RecipeEntity
 
 class RecipeDetailsActivity : AppCompatActivity() {
 
-    private val viewModel: RecipeViewModel by viewModels()
     private lateinit var binding: ActivityRecipeDetailsBinding
     private lateinit var db: LocalRecipeDb
 
