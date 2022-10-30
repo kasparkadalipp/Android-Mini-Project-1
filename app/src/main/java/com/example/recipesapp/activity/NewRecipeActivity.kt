@@ -29,7 +29,6 @@ class NewRecipeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNewRecipeBinding
     private lateinit var db: LocalRecipeDb
-    private var thumbnailURL: String = ""
     private val viewModel: NewRecipeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +44,6 @@ class NewRecipeActivity : AppCompatActivity() {
         Log.i(TAG, "onResume called")
         super.onResume()
         binding.newrecipeThumbnail.setImageBitmap(viewModel.thumbnail)
-        thumbnailURL = viewModel.thumbnailURL
         Log.i(TAG, "load values from viewModel")
     }
 
@@ -63,7 +61,7 @@ class NewRecipeActivity : AppCompatActivity() {
                 Toast.makeText(this, "Title can contain up to 50 characters", Toast.LENGTH_SHORT).show()
             }
             else {
-                saveRecipeToDb(RecipeEntity(0, title.toString(), description.toString(), thumbnailURL))
+                saveRecipeToDb(RecipeEntity(0, title.toString(), description.toString(), viewModel.thumbnailURL))
                 finish()
             }
         }
@@ -76,7 +74,7 @@ class NewRecipeActivity : AppCompatActivity() {
     private fun takePhoto() {
         val file = getPhotoFile(System.currentTimeMillis().toString())
         Log.i(TAG, "Image thumbnail URL set")
-        thumbnailURL = file.absolutePath
+        viewModel.thumbnailURL = file.absolutePath
         val fileUri =
             FileProvider.getUriForFile(this, "ee.ut.cs.recipeappp.fileprovider", file)
 
@@ -89,9 +87,8 @@ class NewRecipeActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 Log.i(TAG, "Image thumbnail set")
-                val thumbnail = getThumbnailOrDefault(thumbnailURL, 800)
+                val thumbnail = getThumbnailOrDefault(viewModel.thumbnailURL, 800)
                 viewModel.thumbnail = thumbnail
-                viewModel.thumbnailURL = thumbnailURL
                 Log.i(TAG, "Update thumbnail in viewmodel")
                 binding.newrecipeThumbnail.setImageBitmap(thumbnail)
             } else {
