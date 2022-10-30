@@ -3,6 +3,7 @@ package com.example.recipesapp.activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,7 +21,8 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var recipesAdapter: RecipesAdapter
-    lateinit var  model: RecipeViewModel
+    lateinit var model: RecipeViewModel
+    var arraylen = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,15 +31,29 @@ class MainActivity : AppCompatActivity() {
         model = ViewModelProvider(this).get(RecipeViewModel::class.java)
         ImageUtils.loadDefaultThumbnail(applicationContext)
         setupRecyclerView()
-        binding.buttonAddNewRecipe.setOnClickListener{addNewRecipe()}
+        binding.buttonAddNewRecipe.setOnClickListener { addNewRecipe() }
     }
 
-    override fun onResume(){
+    override fun onResume() {
         super.onResume()
-        if(model.updateData()){
+        var x=model.recipeArray.size
+
+        arraylen=model.recipeArray.size
+
+        if (model.updateData()) {
+            if (arraylen - model.recipeArray.size == -1){
+                recipesAdapter.data = model.recipeArray
+                recipesAdapter.notifyItemRangeChanged(arraylen, model.recipeArray.size)
+                updateNewThumbnail()
+
+                arraylen=model.recipeArray.size
+            }
+            else{
             recipesAdapter.data = model.recipeArray
             recipesAdapter.notifyItemRangeChanged(0, model.recipeArray.size)
-            updateThumbnails() // TODO if new element is inserted only update its thumbnail
+            updateThumbnails()
+
+            arraylen=model.recipeArray.size}
         }
     }
 
@@ -54,12 +70,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateNewThumbnail() {
+        CoroutineScope(Dispatchers.IO).launch {
+            var it = model.recipeArray.last()
+            if (it.url.isNotEmpty()) {
+                it.thumbnail = ImageUtils.getThumbnailOrDefault(it.url, 400)
+                withContext(Dispatchers.Main) {
+                    recipesAdapter.notifyItemChanged(model.recipeArray.size-1)
+                }
+            }
+        }
+    }
+
     private fun addNewRecipe() {
         startActivity(Intent(this, NewRecipeActivity::class.java))
     }
 
     private fun setupRecyclerView() {
-        val recipeClickListener = RecipesAdapter.RecipeClickListener { p -> openRecipeDetailsActivity(p) }
+        val recipeClickListener =
+            RecipesAdapter.RecipeClickListener { p -> openRecipeDetailsActivity(p) }
         recipesAdapter = RecipesAdapter(model.recipeArray, recipeClickListener)
         binding.recyclerviewRecipelist.adapter = recipesAdapter
         val orientation = resources.configuration.orientation
