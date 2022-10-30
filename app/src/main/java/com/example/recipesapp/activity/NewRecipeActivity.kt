@@ -51,11 +51,11 @@ class NewRecipeActivity : AppCompatActivity() {
         binding.newrecipeButtonSave.setOnClickListener {
             // Fetch the values from UI user input
             val title = binding.newrecipeEditTitle.text.trim()
-            val description = binding.newrecipeEditDescription.text
+            val description = binding.newrecipeEditDescription.text.trim()
 
-            if (title.isNullOrEmpty()) {
+            if (title.isEmpty()) {
                 Toast.makeText(this, "Title can't be empty", Toast.LENGTH_SHORT).show()
-            } else if (description.isNullOrEmpty()) {
+            } else if (description.isEmpty()) {
                 Toast.makeText(this, "Description can't be empty", Toast.LENGTH_SHORT).show()
             }else if (title.length > 50) {
                 Toast.makeText(this, "Title can contain up to 50 characters", Toast.LENGTH_SHORT).show()
