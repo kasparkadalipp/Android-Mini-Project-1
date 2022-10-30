@@ -4,20 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    android:padding="8dp">
+
 
     <ImageView
         android:id="@+id/listview_image_recipe_thumbnail"
-        android:layout_width="100sp"
-        android:layout_height="100sp"
+        android:layout_width="200sp"
+        android:layout_height="200sp"
         android:layout_weight="1"
+        android:adjustViewBounds="true"
         android:contentDescription="@string/recipe_thumbnail_description"
+        android:cropToPadding="true"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/listview_text_recipe_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:textSize="24sp"
         android:textStyle="bold" />
 

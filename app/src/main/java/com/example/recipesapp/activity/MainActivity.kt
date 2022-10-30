@@ -1,8 +1,9 @@
 package com.example.recipesapp.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.Configuration
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.recipesapp.ImageUtils
@@ -33,7 +34,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume(){
         super.onResume()
-
         if(model.updateData()){
             recipesAdapter.data = model.recipeArray
             recipesAdapter.notifyItemRangeChanged(0, model.recipeArray.size)
@@ -62,7 +62,13 @@ class MainActivity : AppCompatActivity() {
         val recipeClickListener = RecipesAdapter.RecipeClickListener { p -> openRecipeDetailsActivity(p) }
         recipesAdapter = RecipesAdapter(model.recipeArray, recipeClickListener)
         binding.recyclerviewRecipelist.adapter = recipesAdapter
-        binding.recyclerviewRecipelist.layoutManager = GridLayoutManager(applicationContext, 2)
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            binding.recyclerviewRecipelist.layoutManager = GridLayoutManager(applicationContext, 3)
+        } else {
+            binding.recyclerviewRecipelist.layoutManager = GridLayoutManager(applicationContext, 2)
+        }
+
     }
 
     private fun openRecipeDetailsActivity(recipe: Recipe) {
