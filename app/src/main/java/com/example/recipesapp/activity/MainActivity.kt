@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var recipesAdapter: RecipesAdapter
     lateinit var model: RecipeViewModel
-    var arraylen = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,24 +36,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        var x=model.recipeArray.size
-
-        arraylen=model.recipeArray.size
 
         if (model.updateData()) {
-            if (arraylen - model.recipeArray.size == -1){
-                recipesAdapter.data = model.recipeArray
-                recipesAdapter.notifyItemRangeChanged(arraylen, model.recipeArray.size)
-                updateNewThumbnail()
-
-                arraylen=model.recipeArray.size
-            }
-            else{
             recipesAdapter.data = model.recipeArray
             recipesAdapter.notifyItemRangeChanged(0, model.recipeArray.size)
             updateThumbnails()
-
-            arraylen=model.recipeArray.size}
         }
     }
 
@@ -65,18 +52,6 @@ class MainActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         recipesAdapter.notifyItemChanged(index)
                     }
-                }
-            }
-        }
-    }
-
-    private fun updateNewThumbnail() {
-        CoroutineScope(Dispatchers.IO).launch {
-            var it = model.recipeArray.last()
-            if (it.url.isNotEmpty()) {
-                it.thumbnail = ImageUtils.getThumbnailOrDefault(it.url, 400)
-                withContext(Dispatchers.Main) {
-                    recipesAdapter.notifyItemChanged(model.recipeArray.size-1)
                 }
             }
         }

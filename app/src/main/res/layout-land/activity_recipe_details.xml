@@ -13,7 +13,6 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-
         app:layout_constraintGuide_percent="0.5" />
 
     <ImageView
@@ -45,8 +44,6 @@
         android:textSize="32sp"
         app:autoSizeMaxTextSize="32sp"
         app:autoSizeMinTextSize="12sp"
-
-
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toEndOf="parent"
