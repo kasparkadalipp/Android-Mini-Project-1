@@ -3,7 +3,6 @@ package com.example.recipesapp.activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,6 +16,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.example.recipesapp.RecipeViewModel.ChangeType.NEW_ELEMENT
+import com.example.recipesapp.RecipeViewModel.ChangeType.APPLICATION_OPENED
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -37,10 +38,15 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (model.updateData()) {
+        val result = model.updateData()
+        if (result == APPLICATION_OPENED) {
             recipesAdapter.data = model.recipeArray
             recipesAdapter.notifyItemRangeChanged(0, model.recipeArray.size)
             updateThumbnails()
+        }
+        if(result == NEW_ELEMENT){
+            recipesAdapter.data = model.recipeArray
+            recipesAdapter.notifyItemInserted(model.recipeArray.lastIndex)
         }
     }
 

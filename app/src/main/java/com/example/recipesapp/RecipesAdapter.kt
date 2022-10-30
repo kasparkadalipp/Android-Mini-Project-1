@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class RecipesAdapter(
-    var data: Array<Recipe> = arrayOf(),
+    var data: MutableList<Recipe> = ArrayList(),
     private var listener: RecipeClickListener
 ) : RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder>() {
 
