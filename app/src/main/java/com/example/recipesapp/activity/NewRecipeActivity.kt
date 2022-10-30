@@ -50,7 +50,7 @@ class NewRecipeActivity : AppCompatActivity() {
     private fun setupSaveButton() {
         binding.newrecipeButtonSave.setOnClickListener {
             // Fetch the values from UI user input
-            val title = binding.newrecipeEditTitle.text
+            val title = binding.newrecipeEditTitle.text.trim()
             val description = binding.newrecipeEditDescription.text
 
             if (title.isNullOrEmpty()) {
